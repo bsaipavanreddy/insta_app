@@ -11,14 +11,12 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
     deleted: v.optional(v.boolean()),
-
     clerkId: v.string(),
     clerkRoles: v.optional(v.array(v.string())),
     clerkMetadata: v.optional(v.object({})),
     clerkPrivateMetadata: v.optional(v.object({})),
   }).index("by_clerk_id", ["clerkId"]),
 
-  
   posts: defineTable({
     userId: v.string(),
     imageUrl: v.optional(v.string()),
@@ -39,7 +37,9 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
     deleted: v.optional(v.boolean()),
-  }).index("by_user_id_and_post_id", ["postId", "userId"]).index("by_post_id", ["postId"]),
+  })
+    .index("by_user_id_and_post_id", ["postId", "userId"])
+    .index("by_post_id", ["postId"]),
 
   comments: defineTable({
     userId: v.string(),
@@ -56,24 +56,34 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
     deleted: v.optional(v.boolean()),
-  }).index("by_follower_id", ["followerId"]).index("by_following_id", ["followingId"]).index("by_both", ["followerId", "followingId"]),
- Notifications: defineTable({
- reciverId: v.string(),
- senderId: v.string(),
- type: v.union(v.literal("like"), v.literal("comment"), v.literal("follow")),  
- postId: v.optional(v.id("posts")),
- message: v.string(),
- createdAt: v.number(),
- updatedAt: v.optional(v.number()),
- deleted: v.optional(v.boolean()),
- }).index("by_reciver_id", ["reciverId"]).index("by_sender_id", ["senderId"]).index("by_both", ["reciverId", "senderId"]),
- bookmarks: defineTable({
+  })
+    .index("by_follower_id", ["followerId"])
+    .index("by_following_id", ["followingId"])
+    .index("by_both", ["followerId", "followingId"]),
+
+  notifications: defineTable({
+    receiverId: v.string(),
+    senderId: v.string(),
+    type: v.union(v.literal("like"), v.literal("comment"), v.literal("follow")),
+    postId: v.optional(v.id("posts")),
+    message: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+    deleted: v.optional(v.boolean()),
+  })
+    .index("by_receiver_id", ["receiverId"])
+    .index("by_sender_id", ["senderId"])
+    .index("by_both", ["receiverId", "senderId"]),
+
+  bookmarks: defineTable({
     userId: v.string(),
     postId: v.id("posts"),
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
     deleted: v.optional(v.boolean()),
- }).index("by_user_id_and_post_id", ["postId", "userId"]).index("by_post_id", ["postId"]),
-
+  })
+    .index("by_user_id_and_post_id", ["postId", "userId"])
+    .index("by_post_id", ["postId"]),
 });
- 
+
+// npx convex dev
