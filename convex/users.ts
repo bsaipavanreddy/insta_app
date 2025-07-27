@@ -18,7 +18,7 @@ export const createUser = mutation({
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
       .first();
-
+       await ctx.auth.getUserIdentity();
     if (existingUser) return existingUser;
 
     const now = Date.now();

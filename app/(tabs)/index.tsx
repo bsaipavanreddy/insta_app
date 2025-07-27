@@ -1,19 +1,26 @@
-import { Link } from "expo-router";
-import { Image, Text, View } from "react-native";
+import { useAuth } from "@clerk/clerk-expo";
+import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../../styles/auth.styles";
 
-export default function Index() {
+export default function index() {
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Optional: navigate to login screen or show a message
+      console.log("Signed out successfully");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Insta App DevStage</Text>
-      <Image
-        source={{ uri: "https://reactjs.org/logo-og.png" }}
-        style={{ width: 300, height: 300, resizeMode: "contain" }}
-        accessibilityLabel="React logo"
-      />
-      <Link href="/notifications">
-        <Text style={{ color: "blue", marginTop: 20 }}>Go to Notifications</Text>
-      </Link>
+      <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7}>
+        <Text style={{ color: "white", fontSize: 16 }}>Sign Out</Text>
+      </TouchableOpacity>
     </View>
   );
 }
